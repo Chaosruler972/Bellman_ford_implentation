@@ -1,0 +1,11 @@
+5
+Router1 127.0.0.1 1000
+Router2 127.0.0.1 2000
+Router3 127.0.0.1 3000
+Router4 127.0.0.1 4000
+Router5 127.0.0.1 5000
+Router1 Router2 1
+Router1 Router3 2
+Router2 Router3 7
+Router4 Router5 1
+Router4 Router3 0

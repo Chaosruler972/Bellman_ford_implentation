@@ -261,7 +261,9 @@ int main(int argc, char** argv)
 	pthread_cond_destroy(&calc_cv);
 	free_routers(routers, amount_of_neighbors+1, senders, recievers, all_router_names);
 }
-
+/*
+	initates thread sync data
+*/
 int threadding_data(pthread_t** senderss, pthread_t** recieverss, router** arr)
 {
 	int amount_of_neighbors = arr[0]->amount_of_neighbors;
@@ -287,6 +289,9 @@ int threadding_data(pthread_t** senderss, pthread_t** recieverss, router** arr)
 	}
 	return 1;
 }
+/*
+	reorders the neighbor array 
+*/
 int reorder_arr(router*** arr, router*** arr2)
 {
 	router** all_routers = arr[0];
@@ -346,7 +351,9 @@ int reorder_arr(router*** arr, router*** arr2)
 	}
 	return 1;
 }
-
+/*
+	actual algorithm calculation, runs ONCE per process, unlike the threads which run at 2*(amount of closure of neighbors)
+*/
 void* calculator(void* args)
 {
 	int i,j;
@@ -416,6 +423,9 @@ void* calculator(void* args)
 	}
 	return NULL;
 }
+/*
+	sender thread - acts as indepdent router's network card sending subroutine
+*/
 void* sender(void* args)
 {
 	router* r = (router*) args;
@@ -498,6 +508,10 @@ void* sender(void* args)
 	close(sockfd); // closes the FD
 	return NULL;
 }
+
+/*
+	reciever thread - acts as a independednt router's network card recieving call
+*/
 void* reciever(void* args)
 {
 	router* r = (router*) args;
@@ -588,7 +602,9 @@ void* reciever(void* args)
 	close(connfd);
 	return NULL;
 }
-
+/*
+	function to calculate the ASCII SUM value of a string, purposes of port mapping
+*/
 int ascii_sum(char* n)
 {
 	int sum=0;
@@ -599,6 +615,9 @@ int ascii_sum(char* n)
 	}
 	return sum;
 }
+/*
+	subroutine initates the neighbor data, clearing the routers who are not part of closure of neighbors out of the struct array
+*/
 int neighbor_initation(router** arr)
 {
 	int amount_of_routers = arr[0]->amount_of_routers;
@@ -631,7 +650,9 @@ int neighbor_initation(router** arr)
 	return 1;
 
 }
-
+/*
+	subroutine responisble of finding each router an dupdating the indexes on the struct array
+*/
 int update_my_indexes(router** arr, char* routersname)
 {
 	int amount_of_router = arr[0]->amount_of_routers;
@@ -653,6 +674,10 @@ int update_my_indexes(router** arr, char* routersname)
 	}
 	return 1;
 }
+/*
+	subroutine responsible of calculating distance vector initation, before the algorithm starts, to create a closure for each router
+*/
+
 int initate_DV(FILE* file, router** arr, char* buffer, char* routersname, char** via)
 {
 	int amount_of_router = arr[0]->amount_of_routers;
@@ -744,7 +769,9 @@ int initate_DV(FILE* file, router** arr, char* buffer, char* routersname, char**
 	return 1;
 }
 
-
+/*
+	subroutine responsible of grabbing router data from input file
+*/
 int get_router_data(FILE* file, router** arr, char* buffer, char*** namess)
 {
 	int amount_of_router = arr[0]->amount_of_routers;
@@ -837,6 +864,9 @@ int get_router_data(FILE* file, router** arr, char* buffer, char*** namess)
 	}
 	return 1;
 }
+/*
+	function made for deugging purposes, prints the routers data
+*/
 void print_routers(router** arr, int amount)
 {
 	int i;
@@ -862,6 +892,9 @@ void print_routers(router** arr, int amount)
 	}
 	printf("\n\n");
 }
+/*
+	subroutine responsible of freeing routers structs data and its memory allocation
+*/
 void free_routers(router** arr, int amount, pthread_t* senders, pthread_t* recievers, char** router_names)
 {
 	if(!arr)
@@ -901,6 +934,9 @@ void free_routers(router** arr, int amount, pthread_t* senders, pthread_t* recie
 		free(online);
 	free(arr);
 }
+/*
+	subroutine responsible initating the router struct and it's data, along with allocation
+*/
 int initate_routers(router*** arr, int amount_of_routers,char*** viaa, int reconnect_tries, pthread_cond_t* calc_cv, pthread_mutex_t* calc_lock, int* done, pthread_mutex_t* ticket_lock,int* senders_count  )
 {
 	int i;
@@ -958,7 +994,9 @@ int initate_routers(router*** arr, int amount_of_routers,char*** viaa, int recon
 	}
 	return 1;
 }
-
+/*
+	subroutine to initate string to null terminators, string must be LINESIZE long
+*/
 void empty_string(char* str)
 {
 	int i;
@@ -968,6 +1006,9 @@ void empty_string(char* str)
 		str++;
 	}
 }
+/*
+	attempts to read the file, returns 1 if succesfull, 0 if failed
+*/
 int attempt_read(char* linebuffer, FILE* file)
 {
 	if(!fgets(linebuffer,LINESIZE,file))
@@ -977,6 +1018,9 @@ int attempt_read(char* linebuffer, FILE* file)
 	}
 	return 1;
 }
+/*
+	subroutine responsible for checking input is indeed a number
+*/
 int check_input(char* num)
 {
 	int counter=0;

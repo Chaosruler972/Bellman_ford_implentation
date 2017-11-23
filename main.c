@@ -1,4 +1,3 @@
-//login Zeevme, zeev melumian 308286517
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
